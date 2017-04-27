@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('app');
+Route::get('/', 'HomeController@index');
+Route::get('test', function(){
+  return Auth::user()->name;
 });
+
+Auth::routes();
+
