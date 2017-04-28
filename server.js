@@ -3,7 +3,9 @@ var app = require('express')(),
     io = require('socket.io')(http),
     port = 5000;
 
-var user_names = [];
+var mongo = require('mongodb').MongoClient;
+
+var user_names = {};
 
 http.listen(port, function(){
   console.log('OK, Server is up !!');
@@ -15,17 +17,20 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('new user', function(data){
-    user_names.push(data.new_name);
-    socket.user_name = data.new_name;
-    update_users(user_names);
+    if(!(data.new_name in user_names)) 
+    {
+      user_names[data.email] = {
+        socket: socket,
+        name: data.new_name
+      };
+      socket.user_name = data.new_name;  
+    }
+    update_users(Object.keys(user_names));
   });
 
   socket.on('disconnect', function(data){
-    if (user_names.indexOf(socket.user_name) > -1)
-    {
-      user_names.splice(user_names.indexOf(socket.user_name), 1);
-    }
-    update_users(user_names);
+    delete user_names[socket.user_name];
+    update_users(Object.keys(user_names));
   });
 
 });

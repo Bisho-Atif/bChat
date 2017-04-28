@@ -56,7 +56,7 @@
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script>
       var socket = io.connect('http://localhost:5000');
-      socket.emit('new user', { new_name: '{{Auth::user()->name}}'});
+      socket.emit('new user', { email: '{{Auth::user()->email}}', new_name : '{{Auth::user()->name}}'});
 
       var form = $("#message_form");
       var messages = $("#messages");
@@ -65,9 +65,11 @@
 
       form.submit(function(e){
         e.preventDefault();
+        if ($("#message").val() == '') return;
         var data = {};
         data.message = $("#message").val();
-        data.user_name    = '{{ Auth::user()->name }}';
+        data.user_name    = '{{ Auth::user()->email }}';
+        data.to = 'bishooy.atif@gmail.com';
         socket.emit('send message', data);
         message.val("");
       });
