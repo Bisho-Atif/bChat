@@ -87,28 +87,30 @@
 
       function include_message(message, user_name)
       {
-        var html = "";
-        html += '<li class="media">\
-                  <div class="media-body">\
-                    <div class="media">\
-                      <a class="pull-left" href="#"><img class="media-object img-circle " src="/img/user.png" /></a>\
-                      <div class="media-body" >';
-        html += message;
-        html += '<br/><small class="text-muted">';
-        html += user_name;
-        html += '</small><hr /></div></div></div></li>';
+        var html  = '<li class="media">' +
+                      '<div class="media-body">' +
+                        '<div class="media">' +
+                          '<a class="pull-left" href="#"><img class="media-object img-circle " src="/img/user.png" /></a>' +
+                          '<div class="media-body" >' + message + '<br/><small class="text-muted">' + user_name + '</small><hr /></div>'+
+                        '</div>'+
+                      '</div>'+
+                    '</li>';
         return html;
       }
 
       function include_user(user)
       {
-        var html = '<li class="media">\
-                      <div class="media-body">\
-                        <div class="media">\
-                          <a class="pull-left" href="#"><img class="media-object img-circle" style="max-height:40px;" src="/img/user.png" /></a>\
-                          <div class="media-body" ><h5>';
-        html += user;
-        html += '</h5></div></div></div></li>';
+        var html = '<li class="media">'+
+                      '<div class="media-body">'+
+                        '<div class="media">'+
+                          '<a class="pull-left" href="#">'+
+                            '<img class="media-object img-circle" style="max-height:40px;" src="/img/user.png" /></a>'+
+                          '<div class="media-body" >'+
+                            '<h5>' + user + '</h5>' +
+                          '</div>'+
+                        '</div>'+
+                      '</div>'+
+                    '</li>';
         return html;
       }
     </script>
