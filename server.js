@@ -13,7 +13,6 @@ http.listen(port, function(){
 io.sockets.on('connection', function(socket){
   socket.on('private message', function(data){
     user_names[data.to].socket.emit('private message', {message: data.message, from: data.from});
-    // io.sockets.emit('private message', data);
   });
 
   socket.on('new user', function(data){
