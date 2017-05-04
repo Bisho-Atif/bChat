@@ -1,15 +1,19 @@
 <script type="text/javascript">
   var socket = io.connect('http://localhost:5000');
-  socket.emit('new user', { id: '{{Auth::user()->id}}', nickName : '{{Auth::user()->name}}'});
 
   var form                 = $("#message_form");
-  var messages             = $("#messages");
+  var messagesContainer    = $("#messages");
   var message              = $("#message");
   var onlineUsersContainer = $("#users");
 
   socket.on('private message', function(data){
-    messages.append(include_message(data.message, data.from));
-    console.log(data);
+    messagesContainer.append(include_message(data.message, data.senderNickName));
+  });
+
+  socket.on('load old messages', function(data){
+    data.messages.forEach(function(message){
+      messagesContainer.append(include_message(message.message, message.senderNickName));
+    })
   });
 
   socket.on('users', function(data){

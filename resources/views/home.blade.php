@@ -8,3 +8,7 @@
 @section('content')
   @include('layouts.chat.onlineUsers')
 @endsection
+
+@section('js')
+  @include('js.homeJs')
+@endsection
