@@ -20,8 +20,7 @@
     showUsers(data.userData , onlineUsersContainer);
   });
 
-  function include_message(message, user_name)
-  {
+  function include_message(message, user_name){
     var html  = '<li class="media">' +
                   '<div class="media-body">' +
                     '<div class="media">' +
@@ -33,8 +32,7 @@
     return html;
   }
 
-  function include_user(name, id)
-  {
+  function include_user(name, id){
     var html = '<li class="media">'+
                   '<div class="media-body">'+
                     '<div class="media">'+
@@ -50,13 +48,10 @@
     return html;
   }
 
-  function showUsers(usersData, container)
-  {
+  function showUsers(usersData, container){
     container.text("");
-    usersData.forEach(function(user)
-    {
-      if(user.nickName !== '{{ Auth::user()->name }}') 
-      {
+    usersData.forEach(function(user){
+      if(user.nickName !== '{{ Auth::user()->name }}'){
         container.append(include_user(user.nickName, user.id));
       }
     });

@@ -8,16 +8,17 @@ var app = require('express')(),
     port = 5000,
     mongoose = require('mongoose');
 
-var user_names = {};
+var users = {};
 
-mongoose.connect('mongodb://' + host + '/' + db, function(err)
-{
-  if(err)
-  {
+http.listen(port, function(){
+  console.log('OK, Server is up !!');
+});
+
+mongoose.connect('mongodb://' + host + '/' + db, function(err){
+  if(err){
     console.log('Error with DB');
   }
-  else
-  {
+  else{
     console.log('Connected to the DB!');
   }  
 });
@@ -26,58 +27,58 @@ var privateChatSchema = mongoose.Schema({
   senderId: String,
   senderNickName: String,
   recieverId: String,
-  message: String
+  message: String,
+  created: {type:Date, default:Date.now}
 });
 
 var privateChat = mongoose.model('privateMessage', privateChatSchema);
-
-
-http.listen(port, function(){
-  console.log('OK, Server is up !!');
-});
 
 io.sockets.on('connection', function(socket){
   socket.on('private message', function(data){
     var newMessage = new privateChat(data);
     newMessage.save();
-    if(str(data.recieverId) in user_names)
-    {
-      user_names[data.recieverId].socket.emit('private message', {message: data.message, senderNickName: data.senderNickName});
+    if(String(data.recieverId) in users){
+      users[data.recieverId].socket.emit('private message', {message: data.message, senderNickName: data.senderNickName});
     }
   });
 
   socket.on('new user', function(data){
-    privateChat.find({$or: [{recieverId: data.id, senderId: data.to}, {recieverId: data.to, senderId: data.id}]}, function(err, results){
+    var query = privateChat.find({
+      $or: [
+        {recieverId: data.id, senderId: data.to},
+        {recieverId: data.to, senderId: data.id}
+      ]
+    }).sort('-created').limit(3);
+
+    query.exec(function(err, results){
       if(err) throw err;
-      socket.emit('load old messages', {messages: results});
+      socket.emit('load old messages', {messages: results.reverse()});
     });
-    if(!(data.id in user_names)) 
-    {
-      user_names[data.id] = {
+    
+    if(!(data.id in users)){
+      users[data.id] = {
         socket: socket,
         id: data.id,
         nickName: data.nickName,
       };
-      socket.to = data.to
+      socket.to = data.to;
     }
-    update_users(getNickNames(user_names), Object.keys(user_names));
+    update_users(getNickNames(users), Object.keys(users));
   });
 
   socket.on('disconnect', function(data){
     var deletedUser = socket.user;
-    delete user_names[deletedUser];
-    update_users(getNickNames(user_names), Object.keys(user_names));
+    delete users[deletedUser];
+    update_users(getNickNames(users), Object.keys(users));
   });
 
 });
 
-function update_users(nickNames)
-{
-  io.sockets.emit('users', {userData: getNickNames(user_names) });
+function update_users(nickNames){
+  io.sockets.emit('users', {userData: getNickNames(users) });
 }
 
-function getNickNames(users)
-{
+function getNickNames(users){
   var nickNames = [];
   Object.keys(users).forEach(function(user){
     nickNames.push({nickName: users[user].nickName, id: users[user].id});
