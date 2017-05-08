@@ -62,6 +62,7 @@ io.sockets.on('connection', function(socket){
         nickName: data.nickName,
       };
       socket.to = data.to;
+      socket.user = data.id;
     }
     update_users(getNickNames(users), Object.keys(users));
   });
