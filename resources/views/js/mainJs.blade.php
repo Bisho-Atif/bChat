@@ -40,7 +40,10 @@
                         '<img class="media-object img-circle" style="max-height:40px;" src="/img/user.png" /></a>'+
                       '<div class="media-body" >'+
                         '<h5>' + name + '</h5>'+
-                        '<a href="/private/' + id + '">Chat</a>' +
+                        '<form action="/private/' + id + '" method="POST">' +
+                        '{{ csrf_field() }}' +
+                        '<button class="btn btn-success" type="submit">Chat</button>'+
+                        '</form>'+
                       '</div>'+
                     '</div>'+
                   '</div>'+
