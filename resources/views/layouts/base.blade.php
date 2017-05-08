@@ -14,8 +14,13 @@
   <body style="font-family:Verdana">
     <div class="container">
       <div class="row " style="padding-top:40px;">
-      <h3 class="text-center" ><a href="/">Home</a> </h3>
-      <h3 class="text-center" ><a href="/logout">Logout</a> </h3>
+      <h3 class="text-center" ><a href="/"><button class="btn btn-success">Home</button></a></h3>
+      <h3 class="text-center" >
+        <form action="/logout" method="POST">
+          <button class="btn btn-danger" type="submit">Logout</button>
+          {{ csrf_field() }}
+        </form>
+      </h3>
       
       @yield('header')    
       <br/><br/>
